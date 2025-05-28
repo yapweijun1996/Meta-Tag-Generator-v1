@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Ultimate Meta Tag Generator</title>
+		<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%26%23123%3B%2F%26%23125%3B%3C/text%3E%3C/svg%3E">
+		
+		<style>
+			/* General Styles */
+			:root {
+				--bg-color: #f4f7f6;
+				--text-color: #333;
+				--header-bg: #2c3e50;
+				--header-text: #ecf0f1;
+				--card-bg: #ffffff;
+				--card-border: #e0e0e0;
+				--accent-color: #3498db;
+				--accent-hover: #2980b9;
+				--code-bg: #ecf0f1;
+				--code-border: #bdc3c7;
+				--shadow-light: rgba(0, 0, 0, 0.05);
+				--shadow-medium: rgba(0, 0, 0, 0.1);
+			}
+			
+			body {
+				font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+				margin: 0;
+				padding: 0;
+				background-color: var(--bg-color);
+				color: var(--text-color);
+				line-height: 1.6;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+			
+			.container {
+				max-width: 1200px;
+				margin: 20px auto;
+				padding: 0 15px;
+			}
+			
+			/* Header */
+			header {
+				background-color: var(--header-bg);
+				color: var(--header-text);
+				padding: 30px 15px;
+				text-align: center;
+				margin-bottom: 20px;
+				box-shadow: 0 2px 4px var(--shadow-medium);
+			}
+			
+			header h1 {
+				margin: 0 0 10px;
+				font-size: 2.5em;
+			}
+			
+			header p {
+				font-size: 1.1em;
+				max-width: 800px;
+				margin: 0 auto;
+			}
+			
+			/* Main Layout */
+			.main-content {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 20px;
+			}
+			
+			.meta-tag-selection,
+			.output-section {
+				flex: 1;
+				min-width: 300px; /* Ensures stacking on smaller screens */
+			}
+			
+			.meta-tag-selection {
+				flex: 2; /* Takes more space for selection */
+				display: flex;
+				flex-direction: column;
+			}
+			
+			.output-section {
+				flex: 1; /* Takes less space for output */
+				position: sticky; /* Make it sticky */
+				top: 20px; /* Distance from top */
+				height: fit-content; /* Only take content height */
+				align-self: flex-start; /* Align to the top of the flex container */
+				background-color: var(--card-bg);
+				border-radius: 8px;
+				box-shadow: 0 2px 8px var(--shadow-light);
+				padding: 20px;
+				overflow: hidden;
+			}
+			
+			
+			/* Meta Tag List */
+			#meta-tag-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: 20px;
+				padding: 20px;
+				background-color: var(--card-bg);
+				border-radius: 8px;
+				box-shadow: 0 2px 8px var(--shadow-light);
+			}
+			
+			.category-heading {
+				grid-column: 1 / -1; /* Spans all columns */
+				font-size: 1.8em;
+				color: var(--header-bg);
+				margin-top: 25px;
+				margin-bottom: 15px;
+				padding-bottom: 5px;
+				border-bottom: 2px solid var(--accent-color);
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+			
+			.meta-tag-item {
+				background-color: var(--card-bg);
+				border: 1px solid var(--card-border);
+				border-radius: 8px;
+				padding: 20px;
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+				position: relative;
+				overflow: hidden;
+			}
+			
+			.meta-tag-item:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 4px 12px var(--shadow-medium);
+			}
+			
+			.meta-tag-item .checkbox-label {
+				display: flex;
+				align-items: center;
+				cursor: pointer;
+				font-weight: bold;
+				font-size: 1.1em;
+				color: var(--accent-color);
+				margin-bottom: 5px;
+			}
+			
+			.meta-tag-item input[type="checkbox"] {
+				margin-right: 10px;
+				transform: scale(1.3);
+				accent-color: var(--accent-color); /* Modern way to style checkbox color */
+			}
+			
+			.meta-tag-item .description {
+				font-size: 0.9em;
+				color: #555;
+				margin: 0;
+			}
+			
+			.meta-tag-item .example-code {
+				background-color: var(--code-bg);
+				border: 1px solid var(--code-border);
+				border-left: 4px solid var(--accent-color);
+				border-radius: 4px;
+				padding: 10px;
+				font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+				font-size: 0.85em;
+				white-space: pre-wrap;
+				word-break: break-all;
+				overflow-x: auto;
+				color: #364f6b;
+				margin-top: 10px;
+			}
+			
+			.meta-tag-item .input-field {
+				width: calc(100% - 20px);
+				padding: 8px 10px;
+				margin-top: 10px;
+				border: 1px solid var(--card-border);
+				border-radius: 4px;
+				font-size: 0.9em;
+				color: var(--text-color);
+				background-color: var(--bg-color);
+			}
+			
+			.meta-tag-item .input-field::placeholder {
+				color: #888;
+			}
+			
+			.meta-tag-item .notes {
+				font-size: 0.8em;
+				color: #777;
+				margin-top: 5px;
+				font-style: italic;
+			}
+			
+			/* Output Section */
+			.output-section h2 {
+				color: var(--header-bg);
+				margin-top: 0;
+				font-size: 1.6em;
+				border-bottom: 2px solid var(--accent-color);
+				padding-bottom: 10px;
+				margin-bottom: 15px;
+			}
+			
+			#generated-code {
+				box-sizing: border-box;
+				width: 100%;
+				min-height: 250px; /* Minimum height for textarea */
+				padding: 15px;
+				border: 1px solid var(--code-border);
+				border-radius: 4px;
+				font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+				font-size: 0.9em;
+				background-color: var(--code-bg);
+				color: #364f6b;
+				resize: vertical;
+				box-shadow: inset 0 1px 3px var(--shadow-light);
+			}
+			
+			#copy-code-btn {
+				display: block;
+				width: 100%;
+				padding: 12px 20px;
+				margin-top: 15px;
+				background-color: var(--accent-color);
+				color: white;
+				border: none;
+				border-radius: 5px;
+				font-size: 1em;
+				cursor: pointer;
+				transition: background-color 0.3s ease, transform 0.1s ease;
+				box-shadow: 0 2px 4px var(--shadow-medium);
+			}
+			
+			#copy-code-btn:hover {
+				background-color: var(--accent-hover);
+				transform: translateY(-1px);
+			}
+			
+			#copy-code-btn:active {
+				transform: translateY(0);
+				box-shadow: 0 1px 2px var(--shadow-light);
+			}
+			
+			#copy-feedback {
+				display: none;
+				margin-top: 10px;
+				text-align: center;
+				color: var(--accent-color);
+				font-weight: bold;
+				font-size: 0.9em;
+				opacity: 0;
+				transition: opacity 0.3s ease;
+			}
+			
+			#copy-feedback.show {
+				opacity: 1;
+			}
+			
+			/* Footer */
+			footer {
+				text-align: center;
+				padding: 20px;
+				margin-top: 30px;
+				color: #777;
+				font-size: 0.9em;
+				border-top: 1px solid var(--card-border);
+			}
+			
+			/* Responsive Adjustments */
+			@media (max-width: 992px) {
+				.main-content {
+					flex-direction: column;
+				}
+				
+				.meta-tag-selection,
+				.output-section {
+					flex: none; /* Disable flex-grow */
+					width: 100%;
+				}
+				
+				.output-section {
+					position: static; /* Remove sticky behavior on smaller screens */
+					margin-top: 20px;
+				}
+			}
+			
+			@media (max-width: 768px) {
+				header h1 {
+					font-size: 2em;
+				}
+				
+				header p {
+					font-size: 1em;
+				}
+				
+				#meta-tag-list {
+					grid-template-columns: 1fr; /* Single column on small screens */
+				}
+				
+				.meta-tag-item {
+					padding: 15px;
+				}
+				
+				.meta-tag-item .checkbox-label {
+					font-size: 1em;
+				}
+				
+				.meta-tag-item input[type="checkbox"] {
+					transform: scale(1.2);
+				}
+				
+				.output-section h2 {
+					font-size: 1.4em;
+				}
+				
+				#generated-code {
+					min-height: 200px;
+					font-size: 0.85em;
+				}
+			}
+			
+			@media (max-width: 480px) {
+				.container {
+					margin: 10px auto;
+					padding: 0 10px;
+				}
+				
+				header {
+					padding: 20px 10px;
+				}
+				
+				header h1 {
+					font-size: 1.8em;
+				}
+				
+				#meta-tag-list {
+					padding: 15px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Ultimate Meta Tag Generator</h1>
+			<p>Explore, select, and generate a comprehensive set of meta tags for your web project. From modern SEO to legacy browser support, we've got you covered.</p>
+		</header>
+		
+		<div class="container main-content">
+			<div class="meta-tag-selection">
+				<h2>Select Meta Tags</h2>
+				<div id="meta-tag-list">
+					<!-- Meta tags will be dynamically loaded here by JavaScript -->
+				</div>
+			</div>
+			
+			<div class="output-section">
+				<h2>Generated Code</h2>
+				<textarea id="generated-code" rows="10" readonly></textarea>
+				<button id="copy-code-btn">Copy Code</button>
+				<span id="copy-feedback">Copied!</span>
+			</div>
+		</div>
+		
+		<footer>
+			<p>© 2024 Ultimate Meta Tag Generator. Created with HTML, CSS, and JavaScript.</p>
+		</footer>
+		
+		<script>
+			const metaTagsData = [
+				// --- 1. General HTML / SEO (Core & Recommended) ---
+				{
+					id: 'charset',
+					name: 'Character Set (UTF-8)',
+					description: 'Specifies the character encoding for the HTML document. UTF-8 is the universal standard and highly recommended.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta charset="UTF-8">',
+					defaultChecked: true
+				},
+				{
+					id: 'viewport',
+					name: 'Viewport',
+					description: 'Controls the layout of the page on mobile browsers, essential for responsive design. `width=device-width` matches screen width, `initial-scale=1.0` sets initial zoom.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+					defaultChecked: true
+				},
+				{
+					id: 'description',
+					name: 'Page Description',
+					description: 'A concise summary of the page\'s content. Used by search engines as a snippet in results and by social media when sharing links.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="description" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., A comprehensive guide to HTML meta tags.',
+					inputAttr: 'content',
+					defaultInput: 'Your concise page description for SEO and social sharing (155-160 characters recommended).'
+				},
+				{
+					id: 'author',
+					name: 'Author',
+					description: 'Defines the author of the webpage. Rarely needed for modern SEO, but can be included.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="author" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., John Doe',
+					inputAttr: 'content',
+					defaultInput: 'Your Name'
+				},
+				{
+					id: 'generator',
+					name: 'Generator',
+					description: 'Identifies the software or tool used to generate the page (e.g., "WordPress 6.3.1").',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="generator" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Visual Studio Code',
+					inputAttr: 'content',
+					defaultInput: 'Your Generator Tool'
+				},
+				{
+					id: 'application-name',
+					name: 'Application Name',
+					description: 'Specifies the name of the web application. Can be used for pinned sites/bookmarks.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="application-name" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., My Web App',
+					inputAttr: 'content',
+					defaultInput: 'Your Web Application Name'
+				},
+				{
+					id: 'language',
+					name: 'Language (Legacy)',
+					description: 'Specifies the default language of the document. Better handled by the `lang` attribute on the `<html>` tag (e.g., `<html lang="en">`).',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="language" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., en',
+					inputAttr: 'content',
+					defaultInput: 'en',
+					notes: 'Use `<html lang="en">` instead for better practice and accessibility.'
+				},
+				{
+					id: 'date',
+					name: 'Date',
+					description: 'Specifies the publication date. Often better conveyed through structured data or content within the page itself.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="date" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 2023-10-27',
+					inputAttr: 'content',
+					defaultInput: new Date().toISOString().split('T')[0]
+				},
+				{
+					id: 'subject',
+					name: 'Subject',
+					description: 'Describes the main subject or topic of the website. Not widely used by search engines.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="subject" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Web Development Tutorials',
+					inputAttr: 'content',
+					defaultInput: 'Your Website Subject'
+				},
+				{
+					id: 'copyright',
+					name: 'Copyright',
+					description: 'Declares copyright information for the page. Rarely used by search engines.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="copyright" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., © 2024 Your Company',
+					inputAttr: 'content',
+					defaultInput: `© ${new Date().getFullYear()} Your Company`
+				},
+				{
+					id: 'rating',
+					name: 'Rating',
+					description: 'Describes the content rating of the page (e.g., `General`, `Mature`, `Restricted`). Not widely used or respected by major search engines.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="rating" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., General',
+					inputAttr: 'content',
+					defaultInput: 'General',
+					notes: 'Only use if content is adult; otherwise, often unnecessary.'
+				},
+				{
+					id: 'distribution',
+					name: 'Distribution',
+					description: 'Specifies the intended audience or distribution (e.g., `Global`, `Local`).',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="distribution" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Global',
+					inputAttr: 'content',
+					defaultInput: 'Global'
+				},
+				{
+					id: 'designer',
+					name: 'Designer',
+					description: 'Specifies the designer of the page.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="designer" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Jane Doe',
+					inputAttr: 'content',
+					defaultInput: 'Web Designer Name'
+				},
+				{
+					id: 'reply-to',
+					name: 'Reply-to',
+					description: 'Specifies an email address for replies. Often ignored by modern browsers.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="reply-to" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., info@example.com',
+					inputAttr: 'content',
+					defaultInput: 'email@example.com'
+				},
+				{
+					id: 'owner',
+					name: 'Owner',
+					description: 'Specifies the owner of the document.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="owner" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Company Name',
+					inputAttr: 'content',
+					defaultInput: 'Company Name'
+				},
+				{
+					id: 'url',
+					name: 'URL (Legacy)',
+					description: 'Specifies the URL of the document. The `<link rel="canonical">` tag is preferred for canonical URLs.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="url" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., http://www.websiteaddress.com',
+					inputAttr: 'content',
+					defaultInput: 'http://www.websiteaddress.com',
+					notes: 'Use `<link rel="canonical">` instead.'
+				},
+				{
+					id: 'identifier-URL',
+					name: 'Identifier URL (Legacy)',
+					description: 'Similar to `url`, specifies the document\'s unique identifier URL. Use `<link rel="canonical">` instead.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="identifier-URL" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., http://www.websiteaddress.com',
+					inputAttr: 'content',
+					defaultInput: 'http://www.websiteaddress.com',
+					notes: 'Use `<link rel="canonical">` instead.'
+				},
+				{
+					id: 'medium',
+					name: 'Medium',
+					description: 'Describes the type of content (e.g., `blog`, `article`). Niche usage.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="medium" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., blog',
+					inputAttr: 'content',
+					defaultInput: 'blog'
+				},
+				{
+					id: 'dc-title',
+					name: 'Dublin Core Title',
+					description: 'A Dublin Core metadata element for the title of the resource. Less commonly used than standard `<title>` or Open Graph.',
+					category: '1. General HTML / SEO',
+					htmlCode: '<meta name="DC.title" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., My Website Title',
+					inputAttr: 'content',
+					defaultInput: 'Unstoppable Robot Ninja'
+				},
+				
+				// --- 2. SEO / Crawler Control ---
+				{
+					id: 'robots',
+					name: 'Robots (Index/Follow)',
+					description: 'Instructs search engines whether to index the page and follow links on it. Set to `noindex` or `nofollow` to restrict.',
+					category: '2. SEO / Crawler Control',
+					htmlCode: '<meta name="robots" content="{{USER_INPUT_CONTENT}}">',
+					defaultChecked: true,
+					requiresInput: true,
+					inputPlaceholder: 'e.g., index, follow (or noindex, nofollow)',
+					inputAttr: 'content',
+					defaultInput: 'index, follow',
+					notes: 'Common values: `index, follow`, `noindex, nofollow`, `noindex`, `nofollow`.'
+				},
+				{
+					id: 'googlebot',
+					name: 'Googlebot (Specific)',
+					description: 'Similar to `robots`, but specific to Google\'s crawler. Overrides `robots` if more restrictive.',
+					category: '2. SEO / Crawler Control',
+					htmlCode: '<meta name="googlebot" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., index, follow',
+					inputAttr: 'content',
+					defaultInput: 'index, follow',
+					notes: 'Google-specific: `nosnippet`, `max-snippet:`, `max-image-preview:`, `notranslate`, `noimageindex`, `unavailable_after:date`.'
+				},
+				{
+					id: 'google-notranslate',
+					name: 'Google (No Translate)',
+					description: 'Prevents Google from offering to translate the page in search results or via the Google Translate toolbar.',
+					category: '2. SEO / Crawler Control',
+					htmlCode: '<meta name="google" content="notranslate">',
+					defaultChecked: false
+				},
+				{
+					id: 'revisit-after',
+					name: 'Revisit After (Legacy)',
+					description: 'Instructs crawlers when to revisit the page. Largely ignored by modern search engines.',
+					category: '2. SEO / Crawler Control',
+					htmlCode: '<meta name="revisit-after" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 7 days',
+					inputAttr: 'content',
+					defaultInput: '7 days',
+					notes: 'Most modern search engines ignore this tag. Use sitemaps and content updates instead.'
+				},
+				{
+					id: 'search-date',
+					name: 'Search Date (Legacy)',
+					description: 'Specifies the date of last site search for outdated search engines. Not relevant today.',
+					category: '2. SEO / Crawler Control',
+					htmlCode: '<meta name="search_date" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 2010-09-27',
+					inputAttr: 'content',
+					defaultInput: new Date().toISOString().split('T')[0],
+					notes: 'Legacy tag, not used by modern search engines.'
+				},
+				
+				// --- 3. Social Media (Open Graph Protocol) ---
+				{
+					id: 'og-title',
+					name: 'OG Title',
+					description: 'The title of your content as it should appear when shared on social media (e.g., Facebook, LinkedIn).',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:title" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., My Awesome Article Title',
+					defaultInput: 'Your Page Title for Social Media'
+				},
+				{
+					id: 'og-description',
+					name: 'OG Description',
+					description: 'A one-to-two sentence description of your content for social sharing previews.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:description" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Learn about meta tags in this comprehensive guide!',
+					defaultInput: 'A short summary of your content for social media.'
+				},
+				{
+					id: 'og-image',
+					name: 'OG Image',
+					description: 'The URL of an image to be used as the preview thumbnail for social shares.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:image" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., https://example.com/social-share.jpg',
+					inputAttr: 'content',
+					defaultInput: 'https://example.com/default-social-image.jpg',
+					notes: 'Minimum 1200x630px recommended for optimal display. Use absolute URLs. Needs `property` attribute.'
+				},
+				{
+					id: 'og-image-alt',
+					name: 'OG Image Alt Text',
+					description: 'Alternative text for the OG image, for accessibility.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:image:alt" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Logo of my company.',
+					inputAttr: 'content',
+					defaultInput: 'Description of the social share image.'
+				},
+				{
+					id: 'og-image-type',
+					name: 'OG Image Type',
+					description: 'The MIME type of the OG image (e.g., `image/jpeg`).',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:image:type" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., image/jpeg',
+					inputAttr: 'content',
+					defaultInput: 'image/jpeg'
+				},
+				{
+					id: 'og-image-width',
+					name: 'OG Image Width',
+					description: 'The width of the OG image in pixels.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:image:width" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 1200',
+					inputAttr: 'content',
+					defaultInput: '1200'
+				},
+				{
+					id: 'og-image-height',
+					name: 'OG Image Height',
+					description: 'The height of the OG image in pixels.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:image:height" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 630',
+					inputAttr: 'content',
+					defaultInput: '630'
+				},
+				{
+					id: 'og-url',
+					name: 'OG URL',
+					description: 'The canonical URL of your content that will be used as its permanent ID in the graph. Should match your page URL.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:url" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., https://your-domain.com/your-page-url',
+					defaultInput: 'https://your-domain.com/your-page-url'
+				},
+				{
+					id: 'og-type',
+					name: 'OG Type',
+					description: 'The type of your object, e.g., "website", "article", "video.movie", "game.achievement".',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:type" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., website, article, video.movie',
+					inputAttr: 'content',
+					defaultInput: 'website'
+				},
+				{
+					id: 'og-site-name',
+					name: 'OG Site Name',
+					description: 'The name of your website. Used if the content is part of a larger website.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:site_name" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., My Awesome Company',
+					defaultInput: 'Your Website Name'
+				},
+				{
+					id: 'og-locale',
+					name: 'OG Locale',
+					description: 'The locale of the resource. Defaults to en_US. e.g., "en_GB", "fr_FR".',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:locale" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., en_US',
+					defaultInput: 'en_US'
+				},
+				{
+					id: 'og-updated-time',
+					name: 'OG Updated Time',
+					description: 'The last time the content was updated, in ISO 8601 format.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:updated_time" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 2023-10-27T10:00:00Z',
+					defaultInput: new Date().toISOString()
+				},
+				{
+					id: 'og-article-published',
+					name: 'OG Article Published Time',
+					description: 'The date and time the article was first published (for `og:type="article"`).',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="article:published_time" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 2023-01-15T08:30:00Z',
+					defaultInput: new Date().toISOString()
+				},
+				{
+					id: 'og-article-modified',
+					name: 'OG Article Modified Time',
+					description: 'The date and time the article was last modified (for `og:type="article"`).',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="article:modified_time" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 2023-10-27T10:00:00Z',
+					defaultInput: new Date().toISOString()
+				},
+				{
+					id: 'og-article-author',
+					name: 'OG Article Author URL',
+					description: 'The URL of the author\'s profile (for `og:type="article"`).',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="article:author" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., https://facebook.com/yourprofile',
+					defaultInput: 'https://facebook.com/yourprofile'
+				},
+				{
+					id: 'og-fb-app-id',
+					name: 'OG Facebook App ID',
+					description: 'Your Facebook App ID, for insights and analytics.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="fb:app_id" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 1234567890123456',
+					defaultInput: 'YOUR_FACEBOOK_APP_ID'
+				},
+				{
+					id: 'fb-page-id',
+					name: 'Facebook Page ID',
+					description: 'The Facebook Page ID associated with the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta name="fb:page_id" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 43929265776',
+					defaultInput: 'YOUR_FACEBOOK_PAGE_ID'
+				},
+				{
+					id: 'fb-admins',
+					name: 'Facebook Admins IDs',
+					description: 'A comma-separated list of Facebook user IDs that are administrators of this page.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="fb:admins" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 987654321',
+					defaultInput: 'YOUR_FACEBOOK_ADMIN_ID'
+				},
+				{
+					id: 'og-email',
+					name: 'OG Email',
+					description: 'Contact email address for the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:email" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., me@example.com',
+					defaultInput: 'contact@example.com'
+				},
+				{
+					id: 'og-phone-number',
+					name: 'OG Phone Number',
+					description: 'Contact phone number for the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:phone_number" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 650-123-4567',
+					defaultInput: '1-800-123-4567'
+				},
+				{
+					id: 'og-fax-number',
+					name: 'OG Fax Number',
+					description: 'Contact fax number for the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:fax_number" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., +1-415-123-4567',
+					defaultInput: '1-415-555-1234'
+				},
+				{
+					id: 'og-latitude',
+					name: 'OG Latitude',
+					description: 'Latitude for a geographic location related to the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:latitude" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 37.416343',
+					defaultInput: '0.0'
+				},
+				{
+					id: 'og-longitude',
+					name: 'OG Longitude',
+					description: 'Longitude for a geographic location related to the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:longitude" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., -122.153013',
+					defaultInput: '0.0'
+				},
+				{
+					id: 'og-street-address',
+					name: 'OG Street Address',
+					description: 'Street address for a geographic location related to the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:street-address" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 1601 S California Ave',
+					defaultInput: '123 Main St'
+				},
+				{
+					id: 'og-locality',
+					name: 'OG Locality',
+					description: 'Locality (city) for a geographic location related to the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:locality" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Palo Alto',
+					defaultInput: 'Anytown'
+				},
+				{
+					id: 'og-region',
+					name: 'OG Region',
+					description: 'Region (state/province) for a geographic location related to the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:region" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., CA',
+					defaultInput: 'CA'
+				},
+				{
+					id: 'og-postal-code',
+					name: 'OG Postal Code',
+					description: 'Postal code for a geographic location related to the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:postal-code" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 94304',
+					defaultInput: '12345'
+				},
+				{
+					id: 'og-country-name',
+					name: 'OG Country Name',
+					description: 'Country name for a geographic location related to the content.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:country-name" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., USA',
+					defaultInput: 'USA'
+				},
+				{
+					id: 'og-points',
+					name: 'OG Points (Game Achievement)',
+					description: 'Points awarded for a game achievement (for `og:type="game.achievement"`).',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:points" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 100',
+					defaultInput: 'POINTS_FOR_ACHIEVEMENT'
+				},
+				{
+					id: 'og-video',
+					name: 'OG Video URL',
+					description: 'A URL for a video file or object for social sharing.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:video" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., http://example.com/awesome.swf',
+					defaultInput: 'http://example.com/video.mp4'
+				},
+				{
+					id: 'og-video-height',
+					name: 'OG Video Height',
+					description: 'The height of the video in pixels.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:video:height" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 640',
+					defaultInput: '640'
+				},
+				{
+					id: 'og-video-width',
+					name: 'OG Video Width',
+					description: 'The width of the video in pixels.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:video:width" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 385',
+					defaultInput: '385'
+				},
+				{
+					id: 'og-video-type',
+					name: 'OG Video Type',
+					description: 'The MIME type of the video (e.g., `application/x-shockwave-flash`, `video/mp4`).',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:video:type" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., video/mp4',
+					defaultInput: 'video/mp4'
+				},
+				{
+					id: 'og-audio',
+					name: 'OG Audio URL',
+					description: 'A URL for an audio file for social sharing.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:audio" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., http://example.com/amazing.mp3',
+					defaultInput: 'http://example.com/audio.mp3'
+				},
+				{
+					id: 'og-audio-title',
+					name: 'OG Audio Title',
+					description: 'The title of the audio.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:audio:title" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Amazing Song',
+					defaultInput: 'My Audio Track'
+				},
+				{
+					id: 'og-audio-artist',
+					name: 'OG Audio Artist',
+					description: 'The artist of the audio.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:audio:artist" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Amazing Band',
+					defaultInput: 'My Favorite Artist'
+				},
+				{
+					id: 'og-audio-album',
+					name: 'OG Audio Album',
+					description: 'The album the audio belongs to.',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:audio:album" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Amazing Album',
+					defaultInput: 'My Latest Album'
+				},
+				{
+					id: 'og-audio-type',
+					name: 'OG Audio Type',
+					description: 'The MIME type of the audio (e.g., `application/mp3`).',
+					category: '3. Social Media (Open Graph)',
+					htmlCode: '<meta property="og:audio:type" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., application/mp3',
+					defaultInput: 'audio/mpeg'
+				},
+				
+				// --- 4. Social Media (Twitter Cards) ---
+				{
+					id: 'twitter-card',
+					name: 'Twitter Card Type',
+					description: 'The type of Twitter card to display. `summary_large_image` is common for rich previews.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:card" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., summary_large_image, summary',
+					defaultInput: 'summary_large_image',
+					notes: 'Common types: `summary`, `summary_large_image`, `app`, `player`.'
+				},
+				{
+					id: 'twitter-site',
+					name: 'Twitter Site Handle',
+					description: 'The Twitter @username of the website (e.g., @YourCompany). For analytics.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:site" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., @YourCompany',
+					inputAttr: 'content',
+					defaultInput: '@yourcompany'
+				},
+				{
+					id: 'twitter-site-id',
+					name: 'Twitter Site ID',
+					description: 'The Twitter user ID of the website (e.g., 2244994945).',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:site:id" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 2244994945',
+					defaultInput: 'YOUR_TWITTER_SITE_ID'
+				},
+				{
+					id: 'twitter-creator',
+					name: 'Twitter Creator Handle',
+					description: 'The Twitter @username of the content creator (e.g., @YourAuthor).',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:creator" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., @YourAuthor',
+					inputAttr: 'content',
+					defaultInput: '@yourauthortwitter'
+				},
+				{
+					id: 'twitter-creator-id',
+					name: 'Twitter Creator ID',
+					description: 'The Twitter user ID of the content creator.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:creator:id" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 2244994945',
+					defaultInput: 'YOUR_TWITTER_CREATOR_ID'
+				},
+				{
+					id: 'twitter-title',
+					name: 'Twitter Title',
+					description: 'The title for the Twitter card (if different from OG title).',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:title" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., A Unique Twitter Title',
+					defaultInput: 'Your Twitter Card Title'
+				},
+				{
+					id: 'twitter-description',
+					name: 'Twitter Description',
+					description: 'A brief description for the Twitter card (if different from OG description).',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:description" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Short description for Twitter.',
+					defaultInput: 'Your Twitter Card Description'
+				},
+				{
+					id: 'twitter-image',
+					name: 'Twitter Image',
+					description: 'The URL of an image for the Twitter card (if different from OG image).',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:image" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., https://example.com/twitter-image.jpg',
+					inputAttr: 'content',
+					defaultInput: 'https://example.com/default-twitter-image.jpg'
+				},
+				{
+					id: 'twitter-image-alt',
+					name: 'Twitter Image Alt Text',
+					description: 'Alternative text for the Twitter image, for accessibility.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:image:alt" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., A captivating image for Twitter.',
+					inputAttr: 'content',
+					defaultInput: 'Description of the Twitter card image.'
+				},
+				{
+					id: 'twitter-player',
+					name: 'Twitter Player URL',
+					description: 'URL of a Flash or HTML5 video player.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:player" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., https://example.com/player.html',
+					defaultInput: 'https://example.com/video-player.html',
+					notes: 'Rarely useful. Often requires additional player dimensions.'
+				},
+				{
+					id: 'twitter-player-width',
+					name: 'Twitter Player Width',
+					description: 'Width of the Twitter player in pixels.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:player:width" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 640',
+					defaultInput: '640'
+				},
+				{
+					id: 'twitter-player-height',
+					name: 'Twitter Player Height',
+					description: 'Height of the Twitter player in pixels.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:player:height" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 360',
+					defaultInput: '360'
+				},
+				{
+					id: 'twitter-app-name-iphone',
+					name: 'Twitter App Name (iPhone)',
+					description: 'Name of the iPhone app associated with the content for deep linking.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:app:name:iphone" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., My iOS App',
+					defaultInput: 'Your iOS App Name',
+					notes: 'Part of Twitter App Card functionality.'
+				},
+				{
+					id: 'twitter-app-id-iphone',
+					name: 'Twitter App ID (iPhone)',
+					description: 'App Store ID of the iPhone app.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:app:id:iphone" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 123456789',
+					defaultInput: 'YOUR_IOS_APP_ID'
+				},
+				{
+					id: 'twitter-app-url-iphone',
+					name: 'Twitter App URL (iPhone)',
+					description: 'Custom URL scheme of the iPhone app for deep linking.',
+					category: '4. Social Media (Twitter Cards)',
+					htmlCode: '<meta name="twitter:app:url:iphone" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., myapp://path',
+					defaultInput: 'yourappscheme://'
+				},
+				// Similar tags exist for iPad and Google Play: twitter:app:name:ipad, twitter:app:id:ipad, twitter:app:url:ipad, twitter:app:name:googleplay, twitter:app:id:googleplay, twitter:app:url:googleplay. Not including for brevity, but they follow the same pattern.
+				
+				// --- 5. Mobile & PWA (General) ---
+				{
+					id: 'theme-color',
+					name: 'Theme Color (Browser UI)',
+					description: 'Defines the color of the browser UI elements (e.g., toolbar, address bar) on mobile devices and PWAs.',
+					category: '5. Mobile & PWA (General)',
+					htmlCode: '<meta name="theme-color" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., #4285F4 (Google Blue) or #FFFFFF',
+					inputAttr: 'content',
+					defaultInput: '#3498db',
+					notes: 'Consider matching your brand color.'
+				},
+				{
+					id: 'mobile-web-app-capable',
+					name: 'Mobile Web App Capable (Android)',
+					description: '(Android/Chrome) Allows the web app to run in full-screen mode when added to the homescreen, hiding browser UI.',
+					category: '5. Mobile & PWA (General)',
+					htmlCode: '<meta name="mobile-web-app-capable" content="yes">',
+					defaultChecked: false
+				},
+				{
+					id: 'format-detection',
+					name: 'Format Detection (General)',
+					description: 'Prevents browsers from automatically detecting and formatting phone numbers, addresses, emails into clickable links.',
+					category: '5. Mobile & PWA (General)',
+					htmlCode: '<meta name="format-detection" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., telephone=no, address=no, email=no',
+					inputAttr: 'content',
+					defaultInput: 'telephone=no, address=no, email=no',
+					notes: 'Useful for preventing unwanted auto-linking on mobile devices, especially iOS Safari.'
+				},
+				
+				// --- 6. Mobile & PWA (iOS/macOS Specific) ---
+				{
+					id: 'apple-mobile-web-app-capable',
+					name: 'iOS Web App Capable',
+					description: 'When set to "yes", the web page behaves like a native app when added to the homescreen on iOS, hiding browser UI.',
+					category: '6. Mobile & PWA (iOS/macOS)',
+					htmlCode: '<meta name="apple-mobile-web-app-capable" content="yes">',
+					defaultChecked: true
+				},
+				{
+					id: 'apple-mobile-web-app-status-bar-style',
+					name: 'iOS Status Bar Style',
+					description: 'Defines the style of the iOS status bar for web apps (e.g., `default`, `black`, `black-translucent`).',
+					category: '6. Mobile & PWA (iOS/macOS)',
+					htmlCode: '<meta name="apple-mobile-web-app-status-bar-style" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., default, black, black-translucent',
+					inputAttr: 'content',
+					defaultInput: 'black-translucent',
+					notes: '`black-translucent` is common for full-screen appearance.'
+				},
+				{
+					id: 'apple-mobile-web-app-title',
+					name: 'iOS App Title',
+					description: 'The title displayed for the web app on the iOS homescreen and in the app switcher.',
+					category: '6. Mobile & PWA (iOS/macOS)',
+					htmlCode: '<meta name="apple-mobile-web-app-title" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., My Awesome App',
+					inputAttr: 'content',
+					defaultInput: 'My PWA App'
+				},
+				{
+					id: 'apple-touch-fullscreen',
+					name: 'iOS Touch Fullscreen',
+					description: 'Enables fullscreen mode for web apps on iOS when added to home screen. Often redundant with `apple-mobile-web-app-capable`.',
+					category: '6. Mobile & PWA (iOS/macOS)',
+					htmlCode: '<meta name="apple-touch-fullscreen" content="yes">',
+					defaultChecked: false
+				},
+				{
+					id: 'apple-itunes-app',
+					name: 'Apple Smart App Banner',
+					description: 'Controls an Apple "Smart App Banner" that appears at the top of the page on iOS, prompting users to open/download an app.',
+					category: '6. Mobile & PWA (iOS/macOS)',
+					htmlCode: '<meta name="apple-itunes-app" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., app-id=myAppStoreID',
+					inputAttr: 'content',
+					defaultInput: 'app-id=YOUR_APP_STORE_ID',
+					notes: 'Include `affiliate-data` and `app-argument` for more control.'
+				},
+				{
+					id: 'apple-mobile-web-app-orientations',
+					name: 'iOS App Orientations',
+					description: 'Specifies preferred orientations for iOS web apps (e.g., `portrait`, `landscape`, `portrait-any`).',
+					category: '6. Mobile & PWA (iOS/macOS)',
+					htmlCode: '<meta name="apple-mobile-web-app-orientations" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., portrait',
+					inputAttr: 'content',
+					defaultInput: 'portrait'
+				},
+				{
+					id: 'HandheldFriendly',
+					name: 'HandheldFriendly (Legacy Mobile)',
+					description: 'A legacy tag to indicate a site is designed for mobile devices. Superseded by the `viewport` meta tag.',
+					category: '6. Mobile & PWA (iOS/macOS)', // Often seen in older iOS recommendations
+					htmlCode: '<meta name="HandheldFriendly" content="True">',
+					defaultChecked: false,
+					notes: 'Only relevant for very old mobile browsers. `viewport` is the modern standard.'
+				},
+				{
+					id: 'MobileOptimized',
+					name: 'MobileOptimized (Legacy Mobile)',
+					description: 'Another legacy tag for mobile optimization, specifying minimum width. Superseded by the `viewport` meta tag.',
+					category: '6. Mobile & PWA (iOS/macOS)', // Often seen in older iOS recommendations
+					htmlCode: '<meta name="MobileOptimized" content="320">',
+					defaultChecked: false,
+					notes: 'Only relevant for very old mobile browsers. `viewport` is the modern standard.'
+				},
+				
+				// --- 7. Mobile & PWA (Windows/Edge Specific) ---
+				{
+					id: 'msapplication-TileColor',
+					name: 'MS Tile Color',
+					description: 'The background color for Windows 8/10 Live Tile when the app is pinned to the Start screen.',
+					category: '7. Mobile & PWA (Windows/Edge)',
+					htmlCode: '<meta name="msapplication-TileColor" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., #2b5797',
+					inputAttr: 'content',
+					defaultInput: '#000000'
+				},
+				{
+					id: 'msapplication-TileImage',
+					name: 'MS Tile Image',
+					description: 'The image for Windows 8/10 Live Tile (e.g., 144x144px).',
+					category: '7. Mobile & PWA (Windows/Edge)',
+					htmlCode: '<meta name="msapplication-TileImage" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., /ms-icon-144x144.png',
+					inputAttr: 'content',
+					defaultInput: '/tile-icon.png',
+					notes: 'Consider providing multiple sizes for different tile types.'
+				},
+				{
+					id: 'msapplication-navbutton-color',
+					name: 'MS Nav Button Color',
+					description: 'Sets the color of the navigation buttons in the browser for pinned sites.',
+					category: '7. Mobile & PWA (Windows/Edge)',
+					htmlCode: '<meta name="msapplication-navbutton-color" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., red',
+					inputAttr: 'content',
+					defaultInput: 'red'
+				},
+				{
+					id: 'msapplication-tooltip',
+					name: 'MS Application Tooltip',
+					description: 'The tooltip text that appears when hovering over a pinned site on the Windows taskbar.',
+					category: '7. Mobile & PWA (Windows/Edge)',
+					htmlCode: '<meta name="msapplication-tooltip" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Launch My Web App',
+					inputAttr: 'content',
+					defaultInput: 'Launch My Application'
+				},
+				{
+					id: 'msapplication-starturl',
+					name: 'MS Start URL',
+					description: 'Specifies the URL the pinned site should open to when launched from the Start screen.',
+					category: '7. Mobile & PWA (Windows/Edge)',
+					htmlCode: '<meta name="msapplication-starturl" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., http://blog.reybango.com/about/',
+					inputAttr: 'content',
+					defaultInput: '/'
+				},
+				{
+					id: 'msapplication-window',
+					name: 'MS Application Window Size',
+					description: 'Sets the default window size for a pinned site.',
+					category: '7. Mobile & PWA (Windows/Edge)',
+					htmlCode: '<meta name="msapplication-window" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., width=800;height=600',
+					inputAttr: 'content',
+					defaultInput: 'width=800;height=600'
+				},
+				{
+					id: 'msapplication-task',
+					name: 'MS Application Task (Jump List)',
+					description: 'Adds a task to the jump list for a pinned site. Multiple instances are possible.',
+					category: '7. Mobile & PWA (Windows/Edge)',
+					htmlCode: '<meta name="msapplication-task" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., name=About;action-uri=/about/;icon-uri=/images/about.ico',
+					inputAttr: 'content',
+					defaultInput: 'name=Example;action-uri=/example/;icon-uri=/images/example.ico'
+				},
+				{
+					id: 'mssmarttagspreventparsing',
+					name: 'MS Smart Tags Prevent Parsing',
+					description: 'Prevents Internet Explorer from parsing content for Smart Tags. Specific to older IE versions.',
+					category: '7. Mobile & PWA (Windows/Edge)',
+					htmlCode: '<meta name="mssmarttagspreventparsing" content="true">',
+					defaultChecked: false,
+					notes: 'Highly specific to older IE, likely not needed.'
+				},
+				{
+					id: 'cleartype',
+					name: 'ClearType (IE Specific)',
+					description: 'Forces Internet Explorer to use ClearType rendering. Specific to older IE versions.',
+					category: '7. Mobile & PWA (Windows/Edge)',
+					htmlCode: '<meta http-equiv="cleartype" content="on">',
+					defaultChecked: false,
+					notes: 'Highly specific to older IE, likely not needed.'
+				},
+				
+				
+				// --- 8. Security & HTTP-Equiv (Modern) ---
+				{
+					id: 'referrer',
+					name: 'Referrer Policy',
+					description: 'Controls the amount of referrer information sent along with requests originating from the document.',
+					category: '8. Security & HTTP-Equiv',
+					htmlCode: '<meta name="referrer" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., no-referrer-when-downgrade',
+					inputAttr: 'content',
+					defaultInput: 'no-referrer-when-downgrade',
+					notes: 'Common values: `no-referrer`, `origin`, `same-origin`, `no-referrer-when-downgrade`.'
+				},
+				{
+					id: 'csp',
+					name: 'Content Security Policy (CSP)',
+					description: 'Controls resources the user agent is allowed to load for the page, preventing certain types of attacks like XSS. **Advanced!**',
+					category: '8. Security & HTTP-Equiv',
+					htmlCode: '<meta http-equiv="Content-Security-Policy" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., default-src \'self\'; img-src *;',
+					inputAttr: 'content',
+					defaultInput: 'default-src \'self\';',
+					notes: 'It\'s generally recommended to set CSP via HTTP headers, not meta tags, for stronger security and flexibility.'
+				},
+				{
+					id: 'x-content-type-options',
+					name: 'X-Content-Type-Options',
+					description: 'Prevents the browser from "MIME-sniffing" a response away from the declared content-type, which can prevent XSS attacks.',
+					category: '8. Security & HTTP-Equiv',
+					htmlCode: '<meta http-equiv="X-Content-Type-Options" content="nosniff">',
+					defaultChecked: false,
+					notes: 'Recommended to set via HTTP headers: `X-Content-Type-Options: nosniff`.'
+				},
+				
+				// --- 9. HTTP-Equiv (Legacy & Deprecated) ---
+				{
+					id: 'x-ua-compatible',
+					name: 'X-UA-Compatible (IE Legacy)',
+					description: 'Instructs older versions of Internet Explorer (IE) to use the latest rendering engine available. Largely irrelevant as IE is deprecated.',
+					category: '9. HTTP-Equiv (Legacy/Deprecated)',
+					htmlCode: '<meta http-equiv="X-UA-Compatible" content="IE=edge">',
+					defaultChecked: false,
+					notes: 'Only for very old IE versions. Modern browsers ignore it.'
+				},
+				{
+					id: 'refresh',
+					name: 'Refresh / Redirect',
+					description: 'Refreshes the page after a specified number of seconds, or redirects to a different URL. **Use with caution!**',
+					category: '9. HTTP-Equiv (Legacy/Deprecated)',
+					htmlCode: '<meta http-equiv="refresh" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 5;url=https://example.com/',
+					inputAttr: 'content',
+					defaultInput: '0;url=https://new-url.com/',
+					notes: 'Can negatively impact UX and SEO if not used carefully. Server-side redirects (301, 302) are preferred.'
+				},
+				{
+					id: 'expires',
+					name: 'Expires (Legacy Caching)',
+					description: 'Specifies the date/time after which the document should be considered expired. Superseded by `Cache-Control`.',
+					category: '9. HTTP-Equiv (Legacy/Deprecated)',
+					htmlCode: '<meta http-equiv="Expires" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 0',
+					inputAttr: 'content',
+					defaultInput: '0',
+					notes: 'Use `Cache-Control` HTTP header instead for modern caching.'
+				},
+				{
+					id: 'pragma',
+					name: 'Pragma (Legacy Caching)',
+					description: 'A legacy caching directive, typically superseded by `Cache-Control`.',
+					category: '9. HTTP-Equiv (Legacy/Deprecated)',
+					htmlCode: '<meta http-equiv="Pragma" content="no-cache">',
+					defaultChecked: false,
+					notes: 'Use `Cache-Control` HTTP header instead.'
+				},
+				{
+					id: 'cache-control',
+					name: 'Cache-Control (Meta HTTP-Equiv)',
+					description: 'Controls caching behavior of the document (e.g., `no-cache`, `no-store`). Better handled by HTTP headers.',
+					category: '9. HTTP-Equiv (Legacy/Deprecated)',
+					htmlCode: '<meta http-equiv="Cache-Control" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., no-cache, no-store',
+					inputAttr: 'content',
+					defaultInput: 'no-cache',
+					notes: 'Recommended to set via HTTP response headers for better control and security.'
+				},
+				{
+					id: 'imagetoolbar',
+					name: 'Image Toolbar (IE Specific)',
+					description: 'Prevents the IE image toolbar from appearing when hovering over images. Specific to older IE versions.',
+					category: '9. HTTP-Equiv (Legacy/Deprecated)',
+					htmlCode: '<meta http-equiv="imagetoolbar" content="no">',
+					defaultChecked: false,
+					notes: 'Highly specific to older IE, likely not needed.'
+				},
+				{
+					id: 'x-dns-prefetch-control',
+					name: 'X-DNS-Prefetch-Control',
+					description: 'Controls DNS prefetching for the page. Useful for performance, but can be controlled via HTTP header too.',
+					category: '9. HTTP-Equiv (Legacy/Deprecated)', // Often found here due to http-equiv, though still has some modern use
+					htmlCode: '<meta http-equiv="x-dns-prefetch-control" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., on, off',
+					inputAttr: 'content',
+					defaultInput: 'off'
+				},
+				{
+					id: 'set-cookie',
+					name: 'Set-Cookie (Deprecated)',
+					description: 'Used to set an HTTP cookie. **Deprecated and discouraged** due to security concerns; cookies should be set via HTTP headers.',
+					category: '9. HTTP-Equiv (Legacy/Deprecated)',
+					htmlCode: '<meta http-equiv="Set-Cookie" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., name=value; expires=date',
+					inputAttr: 'content',
+					defaultInput: 'myCookie=value; expires=Fri, 31 Dec 2024 23:59:59 GMT;',
+					notes: 'Strongly recommended to avoid this and manage cookies via HTTP headers for security.'
+				},
+				
+				
+				// --- 10. Verification & Analytics (Service Specific) ---
+				{
+					id: 'google-site-verification',
+					name: 'Google Site Verification',
+					description: 'Used by Google Search Console to verify ownership of a site.',
+					category: '10. Verification & Analytics',
+					htmlCode: '<meta name="google-site-verification" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 4SMIedO1X4IkYrYuhEC2Vuov...',
+					inputAttr: 'content',
+					defaultInput: 'YOUR_GOOGLE_VERIFICATION_CODE',
+					notes: 'Replaced older `verify-v1` method.'
+				},
+				{
+					id: 'msvalidate',
+					name: 'Bing Site Verification',
+					description: 'Used by Bing Webmaster Tools to verify ownership of a site.',
+					category: '10. Verification & Analytics',
+					htmlCode: '<meta name="msvalidate.01" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 6E3AD52DC176461A3C81DD6E98003BC9',
+					inputAttr: 'content',
+					defaultInput: 'YOUR_BING_VERIFICATION_CODE'
+				},
+				{
+					id: 'norton-safeweb-site-verification',
+					name: 'Norton Safe Web Verification',
+					description: 'Used by Norton Safe Web to verify site ownership for security ratings.',
+					category: '10. Verification & Analytics',
+					htmlCode: '<meta name="norton-safeweb-site-verification" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., tz8iotmk-pkhui406y41y...',
+					inputAttr: 'content',
+					defaultInput: 'YOUR_NORTON_VERIFICATION_CODE'
+				},
+				{
+					id: 'y-key',
+					name: 'Yahoo Site Verification (Legacy)',
+					description: 'Used by Yahoo Site Explorer for site verification (legacy).',
+					category: '10. Verification & Analytics',
+					htmlCode: '<meta name="y_key" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 1e39c508e0d87750',
+					inputAttr: 'content',
+					defaultInput: 'YOUR_YAHOO_VERIFICATION_CODE',
+					notes: 'Yahoo Site Explorer was discontinued. This tag is largely obsolete.'
+				},
+				{
+					id: 'google-analytics-custom',
+					name: 'Custom Google Analytics (JS Driven)',
+					description: 'Example of a custom meta tag to store Google Analytics ID for JavaScript. Not directly processed by browsers as GA code.',
+					category: '10. Verification & Analytics',
+					htmlCode: '<meta name="google-analytics" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., UA-12345678-1',
+					inputAttr: 'content',
+					defaultInput: 'YOUR_GA_TRACKING_ID',
+					notes: 'This tag itself does not enable GA. It requires custom JavaScript to read and use this value.'
+				},
+				{
+					id: 'disqus-custom',
+					name: 'Custom Disqus (JS Driven)',
+					description: 'Example of a custom meta tag to store a Disqus shortname for JavaScript integration.',
+					category: '10. Verification & Analytics',
+					htmlCode: '<meta name="disqus" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., mywebsite',
+					inputAttr: 'content',
+					defaultInput: 'yourdisqusshortname',
+					notes: 'Requires custom JavaScript to read and use this value.'
+				},
+				{
+					id: 'uservoice-custom',
+					name: 'Custom UserVoice (JS Driven)',
+					description: 'Example of a custom meta tag to store UserVoice key for JavaScript integration.',
+					category: '10. Verification & Analytics',
+					htmlCode: '<meta name="uservoice" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., asdfasdf',
+					inputAttr: 'content',
+					defaultInput: 'youruservoicekey',
+					notes: 'Requires custom JavaScript to read and use this value.'
+				},
+				{
+					id: 'mixpanel-custom',
+					name: 'Custom Mixpanel (JS Driven)',
+					description: 'Example of a custom meta tag to store Mixpanel token for JavaScript integration.',
+					category: '10. Verification & Analytics',
+					htmlCode: '<meta name="mixpanel" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., asdfasdf',
+					inputAttr: 'content',
+					defaultInput: 'yourmixpaneltoken',
+					notes: 'Requires custom JavaScript to read and use this value.'
+				},
+				
+				// --- 11. Legacy / Niche / Highly Specific ---
+				{
+					id: 'revised',
+					name: 'Revised Date',
+					description: 'Indicates the date of last revision for the document. Niche and often ignored.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="revised" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Sunday, July 18th, 2010, 5:15 pm',
+					inputAttr: 'content',
+					defaultInput: new Date().toLocaleString()
+				},
+				{
+					id: 'abstract',
+					name: 'Abstract',
+					description: 'A short abstract or summary of the content. Largely ignored by search engines; use `description` instead.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="abstract" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., A brief abstract of the page content.',
+					inputAttr: 'content',
+					defaultInput: ''
+				},
+				{
+					id: 'topic',
+					name: 'Topic',
+					description: 'Specifies the main topic of the page. Niche and largely ignored by search engines.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="topic" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Web Design',
+					inputAttr: 'content',
+					defaultInput: ''
+				},
+				{
+					id: 'summary',
+					name: 'Summary',
+					description: 'A summary of the page content. Use `description` instead.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="summary" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Short summary.',
+					inputAttr: 'content',
+					defaultInput: ''
+				},
+				{
+					id: 'classification',
+					name: 'Classification',
+					description: 'Categorizes the document. Niche and not widely used.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="Classification" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Business',
+					inputAttr: 'content',
+					defaultInput: 'Business'
+				},
+				{
+					id: 'directory',
+					name: 'Directory Submission',
+					description: 'Indicates status for directory submissions (e.g., `submission`). Extremely niche and historical.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="directory" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., submission',
+					inputAttr: 'content',
+					defaultInput: 'submission'
+				},
+				{
+					id: 'pagename',
+					name: 'Page Name (Specific)',
+					description: 'Used to define a specific name for the page within a system. Niche and not standard.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="pagename" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., My Product Page',
+					inputAttr: 'content',
+					defaultInput: 'Page Title'
+				},
+				{
+					id: 'category',
+					name: 'Category (Niche)',
+					description: 'Assigns a category to the page. Niche and not widely used by search engines.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="category" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Technology',
+					inputAttr: 'content',
+					defaultInput: 'General'
+				},
+				{
+					id: 'coverage',
+					name: 'Coverage',
+					description: 'Specifies the geographical or temporal coverage of the content. Niche.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="coverage" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Worldwide',
+					inputAttr: 'content',
+					defaultInput: 'Worldwide'
+				},
+				{
+					id: 'subtitle',
+					name: 'Subtitle',
+					description: 'Provides a subtitle for the page. Not standard HTML and largely ignored.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="subtitle" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., This is my subtitle',
+					inputAttr: 'content',
+					defaultInput: 'This is my subtitle'
+				},
+				{
+					id: 'target',
+					name: 'Target (Niche)',
+					description: 'Specifies the target audience or context. Niche and rarely used.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="target" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., all',
+					inputAttr: 'content',
+					defaultInput: 'all'
+				},
+				{
+					id: 'resourceloaderdynamicstyles',
+					name: 'ResourceLoaderDynamicStyles (MediaWiki)',
+					description: 'Used by MediaWiki for resource loading. Highly specific.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="ResourceLoaderDynamicStyles" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., ',
+					inputAttr: 'content',
+					defaultInput: ''
+				},
+				{
+					id: 'syndication-source',
+					name: 'Syndication Source',
+					description: 'Indicates the URL of the original syndication source. Niche, often for RSS feeds.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="syndication-source" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., https://mashable.com/...',
+					inputAttr: 'content',
+					defaultInput: 'https://example.com/original-source'
+				},
+				{
+					id: 'original-source',
+					name: 'Original Source',
+					description: 'Indicates the URL of the original source if content is syndicated. Niche.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="original-source" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., https://mashable.com/...',
+					inputAttr: 'content',
+					defaultInput: 'https://example.com/original-source'
+				},
+				{
+					id: 'pagekey',
+					name: 'Page Key (Niche)',
+					description: 'A unique key for the page, specific to certain frameworks/systems. Niche.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="pageKey" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., guest-home',
+					inputAttr: 'content',
+					defaultInput: 'guest-home'
+				},
+				{
+					id: 'itemprop-name',
+					name: 'Itemprop Name (Microdata)',
+					description: 'Used for Schema.org microdata, associating a "name" property with the document. Usually on other HTML elements, not just meta.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta itemprop="name" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., jQTouch',
+					inputAttr: 'content',
+					defaultInput: 'Your Item Name',
+					notes: 'While technically a `<meta>` tag, `itemprop` is more commonly used directly on relevant HTML elements (e.g., `<h1 itemprop="name">`).'
+				},
+				{
+					id: 'ICBM',
+					name: 'ICBM (Geospatial)',
+					description: 'Used for geographic coordinates (latitude, longitude) of a location associated with the page. Niche.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="ICBM" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., 40.746990, -73.980537',
+					inputAttr: 'content',
+					defaultInput: '0.0, 0.0',
+					notes: 'For precise location, but not widely consumed by major search engines for local SEO. Use Schema.org instead.'
+				},
+				{
+					id: 'tweetmeme-title',
+					name: 'TweetMeme Title (Legacy)',
+					description: 'Specific to the defunct TweetMeme service to customize retweet buttons.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="tweetmeme-title" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., Retweet Button Explained',
+					inputAttr: 'content',
+					defaultInput: 'Your TweetMeme Title',
+					notes: 'TweetMeme service is no longer active. This tag is obsolete.'
+				},
+				{
+					id: 'blogcatalog',
+					name: 'Blog Catalog (Legacy)',
+					description: 'Used for integration with the Blog Catalog service. Likely obsolete.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="blogcatalog" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., ',
+					inputAttr: 'content',
+					defaultInput: ''
+				},
+				{
+					id: 'rails-csrf-param',
+					name: 'Rails CSRF Param',
+					description: 'Used by Ruby on Rails for Cross-Site Request Forgery (CSRF) protection, defining the parameter name for the CSRF token.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="csrf-param" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., authenticity_token',
+					inputAttr: 'content',
+					defaultInput: 'authenticity_token',
+					notes: 'Specific to Ruby on Rails. Framework-specific.'
+				},
+				{
+					id: 'rails-csrf-token',
+					name: 'Rails CSRF Token',
+					description: 'Used by Ruby on Rails for Cross-Site Request Forgery (CSRF) protection, containing the actual token value.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="csrf-token" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., /bZVwvomkAnwAI1Qd37lFeewvpOIiackk9121fFwWwc=',
+					inputAttr: 'content',
+					defaultInput: 'YOUR_CSRF_TOKEN_HERE',
+					notes: 'Specific to Ruby on Rails. Framework-specific.'
+				},
+				{
+					id: 'news-keywords',
+					name: 'News Keywords (Google News)',
+					description: 'Used by Google News to help categorize articles. Provide comma-separated keywords relevant to the news topic.',
+					category: '11. Legacy / Niche / Specific',
+					htmlCode: '<meta name="news_keywords" content="{{USER_INPUT_CONTENT}}">',
+					requiresInput: true,
+					inputPlaceholder: 'e.g., World Cup, Brazil 2014, soccer',
+					inputAttr: 'content',
+					defaultInput: 'news, keywords, here',
+					notes: 'Specific to Google News, not general SEO.'
+				},
+			];
+			
+			// --- DOM Element References ---
+			const metaTagListContainer = document.getElementById('meta-tag-list');
+			const generatedCodeTextarea = document.getElementById('generated-code');
+			const copyCodeBtn = document.getElementById('copy-code-btn');
+			const copyFeedback = document.getElementById('copy-feedback');
+			
+			// --- Store current input values for dynamic tags ---
+			const userInputValues = new Map(); // Maps meta tag ID to its current input value
+			
+			// --- Functions ---
+			
+			/**
+			* Renders all meta tags into the #meta-tag-list container.
+			* Organizes them by category.
+			*/
+			function renderMetaTags() {
+				metaTagListContainer.innerHTML = ''; // Clear existing content
+				
+				const categories = {};
+				metaTagsData.forEach(tag => {
+					if (!categories[tag.category]) {
+						categories[tag.category] = [];
+					}
+					categories[tag.category].push(tag);
+				});
+				
+				// Sort categories by their name (e.g., "1. General" before "2. SEO")
+				const sortedCategoryNames = Object.keys(categories).sort((a, b) => {
+					const na = parseInt(a, 10), nb = parseInt(b, 10);
+					if (!isNaN(na) && !isNaN(nb)) return na - nb;
+					return a.localeCompare(b);
+				});
+				
+				sortedCategoryNames.forEach(categoryName => {
+					const categoryHeading = document.createElement('h2');
+					categoryHeading.className = 'category-heading';
+					categoryHeading.textContent = categoryName;
+					metaTagListContainer.appendChild(categoryHeading);
+					
+					// Sort tags within each category by their name
+					categories[categoryName].sort((a, b) => a.name.localeCompare(b.name)).forEach(tag => {
+						// Initialize input value if required and not already set
+						if (tag.requiresInput && !userInputValues.has(tag.id)) {
+							userInputValues.set(tag.id, tag.defaultInput || '');
+						}
+						
+						const itemDiv = document.createElement('div');
+						itemDiv.className = 'meta-tag-item';
+						
+						const checkboxLabelDiv = document.createElement('label');
+						checkboxLabelDiv.className = 'checkbox-label';
+						checkboxLabelDiv.htmlFor = tag.id;
+						
+						const checkbox = document.createElement('input');
+						checkbox.type = 'checkbox';
+						checkbox.id = tag.id;
+						checkbox.checked = tag.defaultChecked || false;
+						checkbox.addEventListener('change', updateGeneratedCode);
+						
+						const tagNameSpan = document.createElement('span');
+						tagNameSpan.textContent = tag.name;
+						
+						checkboxLabelDiv.appendChild(checkbox);
+						checkboxLabelDiv.appendChild(tagNameSpan);
+						itemDiv.appendChild(checkboxLabelDiv);
+						
+						const descriptionP = document.createElement('p');
+						descriptionP.className = 'description';
+						descriptionP.textContent = tag.description;
+						itemDiv.appendChild(descriptionP);
+						
+						const exampleCodeDiv = document.createElement('div');
+						exampleCodeDiv.className = 'example-code';
+						const codeElement = document.createElement('code');
+						// Display placeholder or default input in example code
+						codeElement.textContent = tag.htmlCode.replace('{{USER_INPUT_CONTENT}}', tag.inputPlaceholder || tag.defaultInput || '...');
+						exampleCodeDiv.appendChild(codeElement);
+						itemDiv.appendChild(exampleCodeDiv);
+						
+						if (tag.requiresInput) {
+							const inputField = document.createElement('input');
+							inputField.type = 'text';
+							inputField.className = 'input-field';
+							inputField.placeholder = tag.inputPlaceholder || 'Enter value';
+							inputField.value = userInputValues.get(tag.id) || ''; // Set current value
+							inputField.dataset.tagId = tag.id; // Link input to tag ID
+							inputField.addEventListener('input', (event) => {
+								userInputValues.set(tag.id, event.target.value);
+								updateGeneratedCode(); // Update code on input change
+							});
+							itemDiv.appendChild(inputField);
+						}
+						
+						if (tag.notes) {
+							const notesP = document.createElement('p');
+							notesP.className = 'notes';
+							notesP.textContent = `Note: ${tag.notes}`;
+							itemDiv.appendChild(notesP);
+						}
+						
+						metaTagListContainer.appendChild(itemDiv);
+					});
+				});
+			}
+			
+			/**
+			* Updates the content of the generated code textarea based on selected checkboxes
+			* and user input values.
+			*/
+			function updateGeneratedCode() {
+				let selectedCode = [];
+				const allCheckboxes = metaTagListContainer.querySelectorAll('input[type="checkbox"]');
+				
+				// Collect IDs of checked tags
+				const checkedTagIds = new Set(
+				Array.from(allCheckboxes)
+				.filter(checkbox => checkbox.checked)
+				.map(checkbox => checkbox.id)
+				);
+				
+				// Filter metaTagsData to get only the selected tags, preserving original order from metaTagsData
+				// This ensures that the generated code maintains a logical order
+				metaTagsData.forEach(tag => {
+					if (checkedTagIds.has(tag.id)) {
+						let codeToAppend = tag.htmlCode;
+						if (tag.requiresInput) {
+							const inputValue = userInputValues.get(tag.id) || '';
+							// Replace placeholder with actual user input
+							codeToAppend = codeToAppend.replace('{{USER_INPUT_CONTENT}}', inputValue);
+						}
+						selectedCode.push(codeToAppend);
+					}
+				});
+				
+				generatedCodeTextarea.value = selectedCode.join('\n').trim();
+			}
+			
+			/**
+			* Copies the generated code to the user's clipboard.
+			*/
+			function copyCode() {
+				generatedCodeTextarea.select();
+				generatedCodeTextarea.setSelectionRange(0, 99999); // For mobile devices
+				
+				try {
+					navigator.clipboard.writeText(generatedCodeTextarea.value);
+					copyFeedback.textContent = 'Copied!';
+					copyFeedback.classList.add('show');
+					setTimeout(() => {
+						copyFeedback.classList.remove('show');
+					}, 2000); // Hide after 2 seconds
+				} catch (err) {
+					console.error('Failed to copy text: ', err);
+					copyFeedback.textContent = 'Failed to copy!';
+					copyFeedback.classList.add('show');
+					setTimeout(() => {
+						copyFeedback.classList.remove('show');
+					}, 2000);
+				}
+			}
+			
+			// --- Event Listeners and Initial Setup ---
+			document.addEventListener('DOMContentLoaded', () => {
+				renderMetaTags(); // Render tags initially
+				updateGeneratedCode(); // Generate initial code based on defaultChecked and defaultInput values
+				copyCodeBtn.addEventListener('click', copyCode);
+			});
+		</script>
+	</body>
+</html>
