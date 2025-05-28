@@ -1,5 +1,8 @@
 # Meta Tag Generator
 
+![image](https://github.com/user-attachments/assets/3e7ac1ee-1544-4f5f-8ce3-6d5a6ec0c130)
+
+
 [Live Demo](https://yapweijun1996.github.io/Meta-Tag-Generator-v1/)
 
 A simple, interactive tool to select and generate HTML meta tags for SEO, social sharing, PWA support, and more.
